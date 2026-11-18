@@ -229,12 +229,13 @@ async function demarrer() {
     message("Chargement de Python (Pyodide)…");
     pyodide = await loadPyodide();
 
-    message("Chargement des bibliothèques (shapely, numpy, affine)…");
-    await pyodide.loadPackage(["micropip", "shapely", "affine", "typing-extensions"]);
+    message("Chargement des bibliothèques (shapely, numpy)…");
+    await pyodide.loadPackage(["micropip", "shapely", "typing-extensions"]);
 
-    message("Installation de qrcode…");
+    // Boxes exige affine >= 3.0.1 (Pyodide n'en fournit que la 2.4) : on l'installe depuis PyPI
+    message("Installation de affine et qrcode…");
     const micropip = pyodide.pyimport("micropip");
-    await micropip.install("qrcode");
+    await micropip.install(["affine>=3.0.1", "qrcode"]);
 
     message("Chargement du code de Boxes…");
     const reponse = await fetch("boxes.zip");
